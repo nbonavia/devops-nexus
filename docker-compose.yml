@@ -1,0 +1,24 @@
+version: '3.6'
+
+services:
+  nexus:
+    container_name: nexus
+    hostname: nexus
+    image: sonatype/nexus3:latest
+    ports:
+      - "${HTTP_PORT}:8081"
+      - "${HTTPS_PORT}:8443"
+    environment:
+      NEXUS_CONTEXT: /
+      INSTALL4J_ADD_VM_PARAMS: -Xms500m -Xmx4000m -XX:MaxDirectMemorySize=2g
+    command: |
+       /bin/bash -c "
+        mkdir -p /nexus-data/etc
+        rm -f /nexus-data/etc/nexus.properties
+        ln -s /opt/sonatype/nexus.properties /nexus-data/etc/nexus.properties
+        /opt/sonatype/start-nexus-repository-manager.sh"
+    volumes:
+      - "./ssl/${MODE}.jks:/opt/sonatype/nexus/etc/ssl/keystore.jks"
+      - "./jetty-https.xml:/opt/sonatype/nexus/etc/jetty/jetty-https.xml"      
+      - "./nexus-data:/nexus-data"
+      - "./nexus.properties:/opt/sonatype/nexus.properties"
