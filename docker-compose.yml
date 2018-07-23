@@ -22,3 +22,4 @@ services:
       - "./jetty-https.xml:/opt/sonatype/nexus/etc/jetty/jetty-https.xml"      
       - "./nexus-data:/nexus-data"
       - "./nexus.properties:/opt/sonatype/nexus.properties"
+    restart: ${RESTART}
